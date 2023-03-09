@@ -1,7 +1,7 @@
 <template>
-  <HelloWorld />
+  <testSupabase />
 </template>
 
 <script setup>
-  import HelloWorld from '@/components/HelloWorld.vue'
+  import testSupabase from '@/components/ClientBase.vue'
 </script>
