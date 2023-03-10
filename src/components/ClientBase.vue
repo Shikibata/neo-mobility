@@ -58,7 +58,8 @@ export default {
         console.error(error)
       } else {
         console.log(data)
-      }
+        await this.getClients()
+    }
   },
     async deleteClient(id) {
       if (confirm('Are you sure you want to delete this client?')) {

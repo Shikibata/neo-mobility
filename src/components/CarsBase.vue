@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-container>
-      <v-form validate-on="submit" @submit="insertCar">
+      <v-form validate-on="submit" @submit.prevent="insertCar">
         <v-text-field v-model="carName" label="carName" />
         <v-btn type="submit" block class="mt-2">Create car</v-btn>
       </v-form>
@@ -92,6 +92,8 @@ export default {
         console.error(error)
       } else {
         console.log(data)
+        this.carCreated = true
+        await this.getCar()
       }
     },
     async deleteCar(id) {

@@ -19,6 +19,26 @@
       Reservation confirmed!
     </v-snackbar>
   </v-form>
+
+  <v-container>
+    <table>
+      <thead>
+      <tr>
+        <th>Car Name</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr v-for="(booking, index) in bookings" :key="index">
+        <td>{{ booking.carName }}</td>
+        <td>{{ booking.startDate }}</td>
+        <td>{{ booking.endDate }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </v-container>
+
 </template>
 
 <script>
@@ -42,6 +62,7 @@ export default {
       clients: [],
       picker: new Date().toISOString().substr(0, 10),
       reservationConfirmed: false,
+      bookings: [],
     }
   },
   computed: {
@@ -54,6 +75,7 @@ export default {
   async created() {
     await this.getClients()
     await this.getCars()
+    await this.getBookings()
   },
   methods: {
     async getCars() {
@@ -104,7 +126,22 @@ export default {
         }))
       }
     },
+    async getBookings() {
+      const { data, error } = await supabase.from('bookings')
+          .select('*, cars(carName)')
+          .order('startDate', { ascending: false })
 
+      if (error) {
+        console.error(error)
+      } else {
+        this.bookings = data.map(booking => ({
+          id: booking.id,
+          carName: booking.cars.carName,
+          startDate: booking.startDate,
+          endDate: booking.endDate
+        }))
+      }
+    },
     async submit() {
       const { data: bookings, error } = await supabase.from('bookings').insert([
         {
