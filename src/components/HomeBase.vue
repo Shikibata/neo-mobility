@@ -33,7 +33,7 @@
           <v-card-text class="text-center">
             View all bookings and their details
           </v-card-text>
-          <router-link class="text-decoration-none d-block text-center text-uppercase font-weight-bold py-2 px-4 primary white--text" to="/bookings">View Bookings</router-link>
+          <router-link class="text-decoration-none d-block text-center text-uppercase font-weight-bold py-2 px-4 primary white--text" to="/booking">View Bookings</router-link>
         </v-card>
       </v-col>
     </v-row>
