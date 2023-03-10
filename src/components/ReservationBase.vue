@@ -1,5 +1,10 @@
 <template>
-  <v-form v-model="valid" @submit.prevent="submit">
+
+  <v-container class="ma-8">
+    <v-card-title class="text-h4 text-center">
+      Rent a car
+    </v-card-title>
+  <v-form v-model="valid" @submit.prevent="insertBookings">
     <v-row>
       <v-col cols="12">
         <v-select v-model="selectedClient" :items="clients" item-title="username" item-value="id" label="Select Client" :rules="[rules.required]" />
@@ -19,9 +24,10 @@
       Reservation confirmed!
     </v-snackbar>
   </v-form>
+  </v-container>
 
   <v-container>
-    <table>
+    <v-table>
       <thead>
       <tr>
         <th>Car Name</th>
@@ -36,7 +42,7 @@
         <td>{{ booking.endDate }}</td>
       </tr>
       </tbody>
-    </table>
+    </v-table>
   </v-container>
 
 </template>
@@ -127,22 +133,28 @@ export default {
       }
     },
     async getBookings() {
-      const { data, error } = await supabase.from('bookings')
-          .select('*, cars(carName)')
-          .order('startDate', { ascending: false })
-
+      const { data, error } = await supabase.from('bookings').select('*')
       if (error) {
         console.error(error)
       } else {
-        this.bookings = data.map(booking => ({
-          id: booking.id,
-          carName: booking.cars.carName,
-          startDate: booking.startDate,
-          endDate: booking.endDate
-        }))
+        const { data: cars, error: carError } = await supabase.from('cars').select('*')
+
+        if (carError) {
+          console.error(carError)
+        } else {
+          this.bookings = data.map(booking => {
+            const car = cars.find(car => car.id === booking.carId)
+            return {
+              carName: car.carName,
+              startDate: booking.dateStart,
+              endDate: booking.dateEnd,
+            }
+          })
+          console.log(this.bookings)
+        }
       }
     },
-    async submit() {
+    async insertBookings() {
       const { data: bookings, error } = await supabase.from('bookings').insert([
         {
           dateStart: this.startDate,
@@ -156,13 +168,9 @@ export default {
       } else {
         console.log(bookings)
         this.reservationConfirmed = true
+        await this.getBookings();
       }
     },
   },
 }
 </script>
-
-
-<style>
-
-</style>

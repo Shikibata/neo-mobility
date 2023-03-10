@@ -1,17 +1,21 @@
 <template>
   <div>
-    <v-container>
+    <v-container class="ma-8">
+      <v-card-title class="text-h4 text-center">
+        Create a new car
+      </v-card-title>
       <v-form validate-on="submit" @submit.prevent="insertCar">
-        <v-text-field v-model="carName" label="carName" />
+        <v-text-field v-model="carName" label="name of the car" />
         <v-btn type="submit" block class="mt-2">Create car</v-btn>
       </v-form>
     </v-container>
 
-    <v-table>
+    <v-table class="ma-8 font-weight-bold">
+      <caption class="text-h4 my-5">List of all the cars</caption>
       <thead>
       <tr>
         <th>Car Name</th>
-        <th>Is Reserved</th>
+        <th>Booked ?</th>
         <th>Actions</th>
       </tr>
       </thead>

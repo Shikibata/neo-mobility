@@ -1,13 +1,17 @@
 <template>
   <div>
-    <v-container>
+    <v-container class="ma-8">
+      <v-card-title class="text-h4 text-center">
+        Create a new client
+      </v-card-title>
       <v-form validate-on="submit" @submit.prevent="insertClient">
         <v-text-field v-model="username" label="Username" />
         <v-btn type="submit" block class="mt-2">Create client</v-btn>
       </v-form>
     </v-container>
 
-    <v-table>
+    <v-table class="ma-8 font-weight-bold">
+      <caption class="text-h4 my-5">List of all the clients</caption>
       <thead>
       <tr>
         <th class="w-50">Username</th>
