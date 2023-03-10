@@ -15,6 +15,9 @@
       </v-col>
     </v-row>
     <v-btn type="submit" :disabled="!valid">Make Reservation</v-btn>
+    <v-snackbar v-if="reservationConfirmed" v-model="reservationConfirmed" :timeout="3000" color="success" class="pa-md-4 mx-lg-auto">
+      Reservation confirmed!
+    </v-snackbar>
   </v-form>
 </template>
 
@@ -38,6 +41,7 @@ export default {
       selectedClient: null,
       clients: [],
       picker: new Date().toISOString().substr(0, 10),
+      reservationConfirmed: false,
     }
   },
   computed: {
@@ -48,8 +52,8 @@ export default {
     },
   },
   async created() {
-    await this.getCars()
     await this.getClients()
+    await this.getCars()
   },
   methods: {
     async getCars() {
@@ -60,10 +64,35 @@ export default {
         this.cars = data.map(car => ({
           id: car.id,
           carName: car.carName,
+          available: true,
         }))
+
+        const { data: bookings, error: bookingError } = await supabase
+            .from('bookings')
+            .select('*')
+            .gte('dateEnd', this.startDate)
+            .lte('dateStart', this.endDate)
+
+        if (bookings) {
+          bookings.forEach(booking => {
+            const bookedCar = this.cars.find(car => car.id === booking.carId)
+            if (bookedCar) {
+              bookedCar.available = false
+            }
+          })
+        }
+        if (bookingError) {
+          console.error(bookingError)
+        } else {
+          bookings.forEach(booking => {
+            const bookedCar = this.cars.find(car => car.id === booking.carId)
+            if (bookedCar) {
+              bookedCar.available = false
+            }
+          })
+      }
       }
     },
-
     async getClients() {
       const { data, error } = await supabase.from('clients').select('*')
       if (error) {
@@ -89,8 +118,14 @@ export default {
         console.error(error)
       } else {
         console.log(bookings)
+        this.reservationConfirmed = true
       }
     },
   },
 }
 </script>
+
+
+<style>
+
+</style>

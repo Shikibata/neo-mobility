@@ -1,24 +1,36 @@
 <template>
   <div>
-    <v-btn @click="getCar">Get list of cars</v-btn>
-    <v-list>
-      <v-list-item v-for="car in cars" :key="car.carName">
-        <v-list-item-content>
-          <v-list-item-title>{{ car.carName }}</v-list-item-title>
-          <v-list-item-subtitle>{{ isCarReserved(car)}}</v-list-item-subtitle>        </v-list-item-content>
-      </v-list-item>
-    </v-list>
     <v-container>
-      <v-form validate-on="submit" @submit.prevent="insertCar">
+      <v-form validate-on="submit" @submit="insertCar">
         <v-text-field v-model="carName" label="carName" />
         <v-btn type="submit" block class="mt-2">Create car</v-btn>
       </v-form>
     </v-container>
+
+    <v-table>
+      <thead>
+      <tr>
+        <th>Car Name</th>
+        <th>Is Reserved</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr v-for="car in cars" :key="car.id">
+        <td>{{ car.carName }}</td>
+        <td>{{ isCarReserved(car) }}</td>
+        <td>
+          <v-btn @click="deleteCar(car.id)">Delete</v-btn>
+        </td>
+      </tr>
+      </tbody>
+    </v-table>
   </div>
 </template>
 
 <script>
 import supabase from '../plugins/supabase.js'
+
 
 export default {
   data() {
@@ -27,13 +39,13 @@ export default {
       carName: '',
       bookings: [],
       booking: null,
+      carCreated: false,
     }
   },
   computed : {
       isCarReserved() {
         return car => {
           if (car.isReserved) {
-            // Find the booking for this car and return its end date
             const booking = this.bookingsData.find(booking => booking.carId === car.id)
             console.log(booking)
             return `Booked until ${booking.dateEnd}`
@@ -42,6 +54,9 @@ export default {
           }
         }
       }
+  },
+  async mounted() {
+    await this.getCar()
   },
   methods: {
     async getCar() {
@@ -77,6 +92,17 @@ export default {
         console.error(error)
       } else {
         console.log(data)
+      }
+    },
+    async deleteCar(id) {
+      if (confirm('Are you sure you want to delete this car?')) {
+        const { data, error } = await supabase.from('cars').delete().match({ id })
+        if (error) {
+          console.error(error)
+        } else {
+          console.log(data)
+          await this.getCar()
+        }
       }
     },
   },

@@ -1,10 +1,9 @@
 <template>
   <v-container>
-    <Cars />
+    <Logs />
   </v-container>
 </template>
 
 <script setup>
-import Cars from '@/components/CarsBase.vue'
+import Logs from '@/components/LogsBase.vue'
 </script>
-

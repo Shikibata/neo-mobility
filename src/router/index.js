@@ -28,6 +28,11 @@ const routes = [
         path: 'booking',
         name: 'Booking',
         component: () => import('@/views/Booking.vue'),
+      },
+      {
+        path: 'logs',
+        name: 'Logs',
+        component: () => import('@/views/Logs.vue'),
       }
     ],
   },

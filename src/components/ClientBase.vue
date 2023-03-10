@@ -1,15 +1,29 @@
 <template>
   <div>
-    <v-btn @click="getClients">Get list of clients</v-btn>
-    <v-list>
-      <v-list-item v-for="client in clients" :key="client.username">{{ client.username }}</v-list-item>
-    </v-list>
     <v-container>
       <v-form validate-on="submit" @submit.prevent="insertClient">
         <v-text-field v-model="username" label="Username" />
         <v-btn type="submit" block class="mt-2">Create client</v-btn>
       </v-form>
     </v-container>
+
+    <v-table>
+      <thead>
+      <tr>
+        <th class="w-50">Username</th>
+        <th class="w-50">Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr v-for="client in clients" :key="client.id">
+        <td>{{ client.username }}</td>
+        <td>
+          <v-btn @click="deleteClient(client.id)">Delete</v-btn>
+        </td>
+      </tr>
+      </tbody>
+    </v-table>
+
   </div>
 </template>
 
@@ -22,6 +36,9 @@ export default {
       clients: [],
       username: '',
     }
+  },
+  async mounted() {
+    await this.getClients()
   },
   methods: {
     async getClients() {
@@ -42,7 +59,18 @@ export default {
       } else {
         console.log(data)
       }
-  }
+  },
+    async deleteClient(id) {
+      if (confirm('Are you sure you want to delete this client?')) {
+        const { data, error } = await supabase.from('clients').delete().match({ id })
+        if (error) {
+          console.error(error)
+        } else {
+          console.log(data)
+          await this.getClients()
+        }
+      }
+    },
 }
 }
 </script>
