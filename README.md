@@ -1,6 +1,6 @@
 # 24h test
 
-A technical test made for [NeoMobility]('https://neo-mobility.be/') in Mars 2023.
+A technical test made for <a href="https://neo-mobility.be/" target="_blank">NeoMobility </a>in Mars 2023.
 
 
 ## Objective
@@ -43,7 +43,7 @@ It was a 24h test started on the 10th of March 2023 at 2:00PM and finished on th
 
 ## Deploy
 
-The project is deployed on [Vercel]('https://www.vercel.com/'). You can find it [here]('https://matrix-mobility.vercel.app/')
+The project is deployed on <b>Vercel</b>. You can find it <a href="https://matrix-mobility.vercel.app/" target="_blank">here</a>
 
 ### Clone
 
