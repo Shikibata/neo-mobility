@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-container class="ma-8">
+    <v-container class="my-8">
       <v-card-title class="text-h4 text-center">
         Create a new client
       </v-card-title>
