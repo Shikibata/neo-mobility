@@ -21,6 +21,8 @@ It was a 24h test started on the 10th of March 2023 at 2:00PM and finished on th
 
 - [x] The user can delete a client, car or reservation.
 
+- [x] Creation of a database using Supabase
+
 <details>
 <summary>Nice to have</summary>
 
